@@ -1,5 +1,14 @@
 package com.pragma.plazoleta.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Restaurant {
     private Long id;
     private String name;
@@ -9,6 +18,7 @@ public class Restaurant {
     private String urlLogo;
     private String nit;
 
+    /**
     public Restaurant(Long id, String name, String address, Long ownerId, String phone, String urlLogo, String nit) {
         this.id = id;
         this.name = name;
@@ -74,4 +84,5 @@ public class Restaurant {
     public void setNit(String nit) {
         this.nit = nit;
     }
+     */
 }

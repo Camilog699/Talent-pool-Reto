@@ -26,7 +26,7 @@ public class RestaurantRequestDto {
     private String phone;
 
     @NotNull(message = "url del logo es obligatorio")
-    private Long urlLogo;
+    private String urlLogo;
 
     @NotNull(message = "Número de identificación es obligatorio")
     @Pattern(regexp = "\\d+(\\d+)?", message = "El numero de identificacion debe ser numerico")

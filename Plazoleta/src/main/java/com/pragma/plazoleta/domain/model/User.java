@@ -1,17 +1,22 @@
-package com.pragma.plazoleta.application.dto.request;
+package com.pragma.plazoleta.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.Date;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class UserRequestDto {
+public class User {
     private Long id;
     private String name;
     private String lastname;
     private String documentNumber;
     private String phone;
+    private Date dateBirth;
     private String email;
     private String password;
-    private Long roleId;
+    private Role roleId;
 }
