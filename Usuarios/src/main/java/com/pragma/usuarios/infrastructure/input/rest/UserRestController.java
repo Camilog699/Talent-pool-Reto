@@ -33,4 +33,19 @@ public class UserRestController {
         userHandler.register(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Get user by id")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "User returned",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+            }
+    )
+    @GetMapping("/getUser/{idUser}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long idUser) {
+        UserResponseDto user = userHandler.getById(idUser);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
