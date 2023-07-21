@@ -1,6 +1,7 @@
 package com.pragma.usuarios.application.handler.impl;
 
 import com.pragma.usuarios.application.dto.request.UserRequestDto;
+import com.pragma.usuarios.application.dto.response.RoleDto;
 import com.pragma.usuarios.application.dto.response.UserResponseDto;
 import com.pragma.usuarios.application.handler.IUserHandler;
 import com.pragma.usuarios.application.mapper.IUserRequestMapper;
@@ -14,9 +15,6 @@ import com.pragma.usuarios.infrastructure.exception.EmailAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +34,10 @@ public class UserHandler implements IUserHandler {
         }
         Role role = roleServicePort.getRole(userRequestDto.getRoleId());
         User user = userRequestMapper.toUser(userRequestDto);
-        user.setIdRole(role);
-        return userResponseMapper.toResponse(userServicePort.saveUser(user), roleDtoMapper.toDto(role));
+        user.setRoleId(role);
+        User userPort = userServicePort.saveUser(user);
+        RoleDto roleDto = roleDtoMapper.toDto(role);
+        return userResponseMapper.toResponse(userPort, roleDto);
     }
 
     @Override
@@ -51,5 +51,4 @@ public class UserHandler implements IUserHandler {
         User user = userServicePort.findUserByEmailModel(email);
         return userRequestMapper.toDto(user);
     }
-
 }

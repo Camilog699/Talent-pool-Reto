@@ -13,7 +13,7 @@ import java.util.List;
 )
 public interface IUserEntityMapper {
 
-    UserEntity toUserEntity(User user);
+    UserEntity toEntity(User user);
     User toUser(UserEntity userEntity);
     List<User> toUserList(List<UserEntity> userEntityList);
 }

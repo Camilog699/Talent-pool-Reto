@@ -2,8 +2,6 @@ package com.pragma.usuarios.domain.spi;
 
 import com.pragma.usuarios.domain.model.User;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.UserEntity;
-
-import java.util.List;
 import java.util.Optional;
 
 public interface IUserPersistencePort {

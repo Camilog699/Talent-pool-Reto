@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(SpringExtension.class)
 class UserHandlerTest {
 
+    public static final String ROLE_ADMINISTRADOR = "ROLE_ADMINISTRADOR";
     @InjectMocks
     UserHandler userHandler;
 
@@ -46,11 +47,11 @@ class UserHandlerTest {
     void mustRegisterAnUser() {
         UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(1L);
         UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
-        User expectedUser = FactoryUserDataTest.getUserModel(1L, "ROLE_ADMINISTRADOR");
+        User expectedUser = FactoryUserDataTest.getUserModel(1L, ROLE_ADMINISTRADOR);
         RoleDto rolResponseDto = FactoryUserDataTest.getRolResponseDto();
 
         Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.empty());
-        Mockito.when(rolServicePort.getRole(any())).thenReturn(expectedUser.getIdRole());
+        Mockito.when(rolServicePort.getRole(any())).thenReturn(expectedUser.getRoleId());
         Mockito.when(userRequestMapper.toUser(any())).thenReturn(expectedUser);
         Mockito.when(rolResponseMapper.toDto(any())).thenReturn(rolResponseDto);
         Mockito.when(userResponseMapper.toResponse(any(), any())).thenReturn(userResponseDto);

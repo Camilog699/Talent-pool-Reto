@@ -1,12 +1,14 @@
 package com.pragma.usuarios.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class User {
     private Long id;
     private String name;
@@ -18,6 +20,7 @@ public class User {
     private String password;
     private Role roleId;
 
+    /**
     public User(Long id, String name, String lastname, String documentNumber, String phone, Date dateBirth, String email, String password, Role roleId) {
         this.id = id;
         this.name = name;
@@ -102,7 +105,8 @@ public class User {
         return roleId;
     }
 
-    public void setIdRole(Role idRole) {
+    public void setIdRole(Role roleId) {
         this.roleId = roleId;
     }
+     */
 }
