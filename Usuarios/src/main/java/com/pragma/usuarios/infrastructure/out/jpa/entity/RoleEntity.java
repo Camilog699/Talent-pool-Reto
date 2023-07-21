@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
+
 @Entity
 @Table(name = "Role")
 @NoArgsConstructor

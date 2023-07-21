@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "usuarios", path = "/api/v1/user", url = "http://localhost:8081")
-public interface IUserClient {
+public interface IUserFeignClient {
     @PostMapping("/create")
     public ResponseEntity<Void> register(@RequestBody UserRequestDto userRequestDto);
 

@@ -1,11 +1,21 @@
 package com.pragma.usuarios.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Role {
 
     private Long id;
-    private String name;
     private String description;
+    private String name;
 
+    /**
     public Role(Long id, String name, String description) {
         this.id = id;
         this.name = name;
@@ -35,4 +45,5 @@ public class Role {
     public void setDescription(String description) {
         this.description = description;
     }
+     */
 }
