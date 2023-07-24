@@ -13,5 +13,5 @@ public class UserRequestDto {
     private String phone;
     private String email;
     private String password;
-    private Long roleId;
+    private RoleRequestDto roleId;
 }

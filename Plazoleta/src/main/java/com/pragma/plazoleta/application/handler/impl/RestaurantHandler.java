@@ -8,6 +8,7 @@ import com.pragma.plazoleta.application.mapper.IRestaurantResponseMapper;
 import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
 import com.pragma.plazoleta.domain.model.Restaurant;
 import com.pragma.plazoleta.domain.model.User;
+import com.pragma.plazoleta.infrastructure.exception.OwnerIdNotFoundException;
 import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class RestaurantHandler implements IRestaurantHandler {
         Restaurant restaurant = restaurantRequestMapper.toRestaurant(restaurantRequestDto);
         Object user = userFeignClient.getUserById(restaurant.getOwnerId());
         if (user == null) {
-            throw new RuntimeException("El usuario no existe");
+            throw new OwnerIdNotFoundException();
         }
         restaurant.setOwnerId(restaurantRequestDto.getOwnerId());
         return restaurantResponseMapper.toResponse(restaurantServicePort.saveRestaurant(restaurant));
