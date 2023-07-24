@@ -7,16 +7,14 @@ import com.pragma.usuarios.domain.model.Role;
 import com.pragma.usuarios.domain.model.User;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.RoleEntity;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.UserEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 public class FactoryUserDataTest {
     public static UserRequestDto getUserRequestDto(Long rolId) {
         UserRequestDto userRequestDto = new UserRequestDto();
 
         userRequestDto.setName("Juan Sebastian");
-        userRequestDto.setLastName("Giraldo");
-        userRequestDto.setIdNumber("1193078576");
+        userRequestDto.setLastname("Giraldo");
+        userRequestDto.setDocumentNumber("1193078576");
         userRequestDto.setPhone("+573148022302");
         userRequestDto.setEmail("sebasgiraldov@gmail.com");
         userRequestDto.setPassword("1234");
@@ -48,7 +46,7 @@ public class FactoryUserDataTest {
         userModel.setPhone("+573148022302");
         userModel.setEmail("sebasgiraldov@gmail.com");
         userModel.setPassword("1234");
-        userModel.setIdRole(getRolModel(roleId, rolName));
+        userModel.setRoleId(getRolModel(roleId, rolName));
 
         return userModel;
     }
@@ -58,12 +56,12 @@ public class FactoryUserDataTest {
 
         userEntity.setId(1L);
         userEntity.setName("Juan Sebastian");
-        userEntity.setLastName("Giraldo");
+        userEntity.setLastname("Giraldo");
         userEntity.setDocumentNumber("1193078576");
         userEntity.setPhone("+573148022302");
         userEntity.setEmail("sebasgiraldov@gmail.com");
         userEntity.setPassword("1234");
-        userEntity.setRole(getRolEntity());
+        userEntity.setRoleId(getRolEntity());
 
         return userEntity;
     }
@@ -73,12 +71,12 @@ public class FactoryUserDataTest {
 
         userEntity.setId(1L);
         userEntity.setName("Juan Sebastian");
-        userEntity.setLastName("Giraldo");
+        userEntity.setLastname("Giraldo");
         userEntity.setDocumentNumber("1193078576");
         userEntity.setPhone("+573148022302");
         userEntity.setEmail("sebasgiraldov2@gmail.com");
         userEntity.setPassword("1234");
-        userEntity.setRole(userEntity.getRole());
+        userEntity.setRoleId(userEntity.getRoleId());
 
         return userEntity;
     }
@@ -113,22 +111,22 @@ public class FactoryUserDataTest {
     }
 
 
-/**
-    public static ResponseDto getResponseClientDto() {
-        ResponseDto responseClientDto = new ResponseDto();
+    /**
+     public static ResponseDto getResponseClientDto() {
+     ResponseDto responseClientDto = new ResponseDto();
 
-        responseClientDto.setMessage("");
-        responseClientDto.setError(false);
-        responseClientDto.setData(getUserRequestDto());
+     responseClientDto.setMessage("");
+     responseClientDto.setError(false);
+     responseClientDto.setData(getUserRequestDto());
 
-        return responseClientDto;
-    }
+     return responseClientDto;
+     }
 
-    public static ResponseEntity<ResponseDto> getResponseEntity() {
-        ResponseDto responseClientDto = getResponseClientDto();
-        return new ResponseEntity<>(responseClientDto, HttpStatus.FOUND);
-    }
- */
+     public static ResponseEntity<ResponseDto> getResponseEntity() {
+     ResponseDto responseClientDto = getResponseClientDto();
+     return new ResponseEntity<>(responseClientDto, HttpStatus.FOUND);
+     }
+     */
 
     public static UserResponseDto getUserRequestDto() {
         UserResponseDto userRequestDto = new UserResponseDto();
