@@ -1,6 +1,8 @@
 package com.pragma.plazoleta.application.handler.impl;
 
+import com.pragma.plazoleta.application.dto.request.ListPaginationRequest;
 import com.pragma.plazoleta.application.dto.request.RestaurantRequestDto;
+import com.pragma.plazoleta.application.dto.response.AllRestaurantResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.application.handler.IRestaurantHandler;
 import com.pragma.plazoleta.application.mapper.IRestaurantRequestMapper;
@@ -42,7 +44,7 @@ public class RestaurantHandler implements IRestaurantHandler {
     }
 
     @Override
-    public List<RestaurantResponseDto> getAllRestaurants() {
-        return restaurantResponseMapper.toResponseList(restaurantServicePort.getAllRestaurants());
+    public List<AllRestaurantResponseDto> getAllRestaurants(ListPaginationRequest listPaginationRequest) {
+        return restaurantResponseMapper.toResponseList(restaurantServicePort.getAllRestaurants( listPaginationRequest.getPageN(), listPaginationRequest.getSize()));
     }
 }

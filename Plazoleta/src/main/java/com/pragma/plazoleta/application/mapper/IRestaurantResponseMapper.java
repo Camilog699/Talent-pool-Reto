@@ -1,5 +1,6 @@
 package com.pragma.plazoleta.application.mapper;
 
+import com.pragma.plazoleta.application.dto.response.AllRestaurantResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.domain.model.Restaurant;
 import org.mapstruct.Mapper;
@@ -13,5 +14,5 @@ import java.util.List;
 public interface IRestaurantResponseMapper {
     RestaurantResponseDto toResponse(Restaurant restaurant);
 
-    List<RestaurantResponseDto> toResponseList(List<Restaurant> restaurantList);
+    List<AllRestaurantResponseDto> toResponseList(List<Restaurant> restaurantList);
 }
