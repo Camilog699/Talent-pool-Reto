@@ -8,9 +8,8 @@ import java.util.Optional;
 public interface IRestaurantPersistencePort {
     Restaurant saveRestaurant(Restaurant restaurant);
 
-
     Restaurant getById(Long userId);
 
 
-    List<Restaurant> getAllRestaurants();
+    List<Restaurant> getAllRestaurants( int pageN, int size);
 }

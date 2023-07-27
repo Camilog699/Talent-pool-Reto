@@ -1,12 +1,16 @@
 package com.pragma.usuarios.application.handler.impl.factory;
 
+import com.pragma.usuarios.application.dto.request.RegisterRequestDto;
 import com.pragma.usuarios.application.dto.request.UserRequestDto;
+import com.pragma.usuarios.application.dto.response.ResponseDto;
 import com.pragma.usuarios.application.dto.response.RoleDto;
 import com.pragma.usuarios.application.dto.response.UserResponseDto;
 import com.pragma.usuarios.domain.model.Role;
 import com.pragma.usuarios.domain.model.User;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.RoleEntity;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.UserEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public class FactoryUserDataTest {
     public static UserRequestDto getUserRequestDto(Long rolId) {
@@ -111,7 +115,7 @@ public class FactoryUserDataTest {
     }
 
 
-    /**
+
      public static ResponseDto getResponseClientDto() {
      ResponseDto responseClientDto = new ResponseDto();
 
@@ -126,7 +130,6 @@ public class FactoryUserDataTest {
      ResponseDto responseClientDto = getResponseClientDto();
      return new ResponseEntity<>(responseClientDto, HttpStatus.FOUND);
      }
-     */
 
     public static UserResponseDto getUserRequestDto() {
         UserResponseDto userRequestDto = new UserResponseDto();
@@ -140,5 +143,17 @@ public class FactoryUserDataTest {
         return userRequestDto;
     }
 
+    public static RegisterRequestDto getRegisterRequestDto() {
+        RegisterRequestDto registerRequestDto = new RegisterRequestDto();
+
+        registerRequestDto.setName("Juan Sebastian");
+        registerRequestDto.setLastname("Giraldo");
+        registerRequestDto.setDocumentNumber("1193078576");
+        registerRequestDto.setPhone("+573148022302");
+        registerRequestDto.setEmail("sebasgiraldov@gmail.com");
+        registerRequestDto.setPassword("1234");
+
+        return registerRequestDto;
+    }
 
 }

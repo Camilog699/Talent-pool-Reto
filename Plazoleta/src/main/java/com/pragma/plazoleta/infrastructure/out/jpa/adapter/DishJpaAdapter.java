@@ -12,6 +12,7 @@ import com.pragma.plazoleta.infrastructure.out.jpa.repository.IDishRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DishJpaAdapter implements IDishPersistencePort {
@@ -38,6 +39,15 @@ public class DishJpaAdapter implements IDishPersistencePort {
             throw new NoDataFoundException();
         }
         return dishEntityMapper.toDishModelList(entityList);
+    }
+
+    @Override
+    public List<Dish> getDishByRestaurantId(Long id) {
+        Optional<List<DishEntity>> entityList = dishRepository.findByRestaurantId(id);
+        if (entityList.isEmpty()) {
+            throw new NoDataFoundException();
+        }
+        return dishEntityMapper.toDishModelList(entityList.get());
     }
 
     @Override

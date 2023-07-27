@@ -9,6 +9,6 @@ import lombok.Setter;
 public class ResponseDto {
     private boolean error;
     private String message;
-    private UserRequestDto data;
+    private Object data;
 
 }

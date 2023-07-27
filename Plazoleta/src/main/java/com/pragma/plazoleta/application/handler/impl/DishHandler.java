@@ -1,6 +1,7 @@
 package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
+import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
 import com.pragma.plazoleta.application.handler.IDishHandler;
 import com.pragma.plazoleta.application.mapper.ICategoryResponseMapper;
@@ -13,9 +14,12 @@ import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
 import com.pragma.plazoleta.domain.model.Category;
 import com.pragma.plazoleta.domain.model.Dish;
 import com.pragma.plazoleta.domain.model.Restaurant;
+import com.pragma.plazoleta.infrastructure.configuration.FeignClientInterceptorImp;
 import com.pragma.plazoleta.infrastructure.exception.CategoryNotFoundException;
+import com.pragma.plazoleta.infrastructure.exception.NotEnoughPrivilegesException;
 import com.pragma.plazoleta.infrastructure.exception.NotUpdatableFieldsException;
 import com.pragma.plazoleta.infrastructure.exception.RestaurantNotFoundException;
+import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,9 @@ public class DishHandler implements IDishHandler {
     private final IDishResponseMapper dishResponseMapper;
     private final ICategoryResponseMapper categoryResponseMapper;
     private final IRestaurantResponseMapper restaurantResponseMapper;
+    private final IUserFeignClient userClient;
+    private final JwtHandler jwtHandler;
+
     @Override
     public DishResponseDto saveDish(DishRequestDto dishRequestDto) {
         Dish dish = dishRequestMapper.toDish(dishRequestDto);
@@ -77,5 +84,25 @@ public class DishHandler implements IDishHandler {
         dish.setDescription(dishRequestDto.getDescription());
         dishServicePort.updateDish(dish);
         return dishResponseMapper.toResponse(dish, categoryResponseMapper.toResponse(categoryServicePort.getById(dishRequestDto.getCategoryId())), restaurantResponseMapper.toResponse(restaurantServicePort.getById(dishRequestDto.getRestaurantId())));
+    }
+
+    public DishResponseDto enableDish(Long id){
+        String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
+        String[] splited = tokenHeader.split("\\s+");
+        String email = jwtHandler.extractUserName(splited[1]);
+        UserRequestDto userRequestDto = (UserRequestDto) userClient.getByEmail(email).getBody().getData();
+        Dish dish = dishServicePort.getById(id);
+        Restaurant restaurant = restaurantServicePort.getById(dish.getRestaurantId().getId());
+        if(!restaurant.getOwnerId().equals(userRequestDto.getId())){
+            throw new NotEnoughPrivilegesException();
+        }
+        dish.setActive(!dish.getActive());
+        dishServicePort.updateDish(dish);
+        return dishResponseMapper.toResponse(dish, categoryResponseMapper.toResponse(categoryServicePort.getById(id)), restaurantResponseMapper.toResponse(restaurantServicePort.getById(id)));
+    }
+
+    @Override
+    public List<DishResponseDto> getDishByRestaurantId(Long id) {
+        return dishResponseMapper.toResponseList(dishServicePort.getDishByRestaurantId(id));
     }
 }

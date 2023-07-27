@@ -30,6 +30,11 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
+    public List<Dish> getDishByRestaurantId(Long id) {
+        return dishPersistencePort.getDishByRestaurantId(id);
+    }
+
+    @Override
     public void updateDish(Dish dish) {
         dishPersistencePort.updateDish(dish);
     }

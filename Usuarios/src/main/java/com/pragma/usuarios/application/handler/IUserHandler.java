@@ -1,14 +1,22 @@
 package com.pragma.usuarios.application.handler;
 
+import com.pragma.usuarios.application.dto.request.AuthenticationRequestDto;
+import com.pragma.usuarios.application.dto.request.RegisterRequestDto;
 import com.pragma.usuarios.application.dto.request.UserRequestDto;
+import com.pragma.usuarios.application.dto.response.JwtResponseDto;
 import com.pragma.usuarios.application.dto.response.UserResponseDto;
-import com.pragma.usuarios.domain.model.User;
-
-import java.util.List;
 
 public interface IUserHandler {
 
     UserResponseDto register(UserRequestDto userRequestDto);
+
+      JwtResponseDto login(AuthenticationRequestDto authenticationRequestDto);
+
+    UserResponseDto registerOwner(UserRequestDto userRequestDto);
+
+    UserResponseDto registerEmployee(RegisterRequestDto registerRequestDto, Long restaurantId);
+
+    UserResponseDto registerClient(RegisterRequestDto registerRequestDto);
 
     UserResponseDto getById(Long userId);
 
