@@ -3,13 +3,16 @@ package com.pragma.plazoleta.application.mapper;
 import com.pragma.plazoleta.application.dto.response.CategoryResponseDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
+import com.pragma.plazoleta.domain.model.Category;
 import com.pragma.plazoleta.domain.model.Dish;
+import com.pragma.plazoleta.domain.model.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -31,5 +34,27 @@ public interface IDishResponseMapper {
     @Mapping(target = "description", source = "dish.description")
     DishResponseDto toResponse(Dish dish, CategoryResponseDto categoryResponseDto, RestaurantResponseDto restaurantResponseDto);
 
-    List<DishResponseDto> toResponseList(List<Dish> dishesList);
+    default List<DishResponseDto> toResponseList(List<Dish> dishModelList, List<Category> categoryModelList, List<Restaurant> restaurantModelList) {
+        return dishModelList.stream()
+                .map(dish -> {
+                    DishResponseDto dishResponseDto = new DishResponseDto();
+
+                    dishResponseDto.setName(dish.getName());
+                    dishResponseDto.setCategoryId(CATEGORY_INSTANCE.toResponse(categoryModelList.stream().filter(
+                            category -> category.getId().equals(dish.getCategoryId().getId())
+                    ).findFirst().get()));
+
+                    dishResponseDto.setDescription(dish.getDescription());
+                    dishResponseDto.setPrice(dish.getPrice());
+
+                    dishResponseDto.setRestaurantId(RESTAURANT_INSTANCE.toResponse(restaurantModelList.stream().filter(
+                            restaurant -> restaurant.getId().equals(dish.getRestaurantId().getId())
+                    ).findFirst().get()));
+
+                    dishResponseDto.setUrlImage(dish.getUrlImage());
+                    dishResponseDto.setActive(dish.getActive());
+
+                    return dishResponseDto;
+                }).collect(Collectors.toList());
+    }
 }

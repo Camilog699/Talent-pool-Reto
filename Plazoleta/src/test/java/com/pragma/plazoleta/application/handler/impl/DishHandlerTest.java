@@ -2,6 +2,7 @@ package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
 import com.pragma.plazoleta.application.dto.request.DishUpdateRequestDto;
+import com.pragma.plazoleta.application.dto.request.ListPaginationRequest;
 import com.pragma.plazoleta.application.dto.response.CategoryResponseDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
 import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
@@ -116,14 +117,26 @@ class DishHandlerTest {
         List<Dish> dishModelList = new ArrayList<>();
         dishModelList.add(FactoryDishDataTest.getDishModel());
 
+        List<Category> categoryModelList = new ArrayList<>();
+        categoryModelList.add(FactoryDishDataTest.getCategoryModel());
+
+        List<Restaurant> restaurantModelList = new ArrayList<>();
+        restaurantModelList.add(FactoryDishDataTest.getRestaurantModel());
+
         List<DishResponseDto> dishResponseDtos = new ArrayList<>();
         dishResponseDtos.add(FactoryDishDataTest.getDishResponseDto());
 
-        when(dishServicePort.getDishByRestaurantId(1L)).thenReturn(dishModelList);
+        ListPaginationRequest listPaginationRequest = new ListPaginationRequest();
+        listPaginationRequest.setPageN(0);
+        listPaginationRequest.setSize(20);
 
-        Assertions.assertEquals(dishResponseDtos, dishHandler.getDishByRestaurantId(1L));
+        when(dishServicePort.getDishByRestaurantId(0, 20, 3L)).thenReturn(dishModelList);
+        when(categoryServicePort.getAllCategories()).thenReturn(categoryModelList);
+        when(restaurantServicePort.getAllRestaurants()).thenReturn(restaurantModelList);
 
-        verify(dishResponseMapper).toResponseList(dishModelList);
+        Assertions.assertEquals(dishResponseDtos, dishHandler.getDishByRestaurantId(listPaginationRequest, 1L));
+
+        verify(dishResponseMapper).toResponseList(dishModelList, categoryModelList, restaurantModelList);
     }
 
 }

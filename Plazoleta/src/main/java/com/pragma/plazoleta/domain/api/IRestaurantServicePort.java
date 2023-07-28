@@ -11,5 +11,6 @@ public interface IRestaurantServicePort {
 
     Restaurant getById(Long userId);
 
+    List<Restaurant> getAllRestaurants();
     List<Restaurant> getAllRestaurants(int pageN, int size);
 }

@@ -2,6 +2,7 @@ package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
 import com.pragma.plazoleta.application.dto.request.DishUpdateRequestDto;
+import com.pragma.plazoleta.application.dto.request.ListPaginationRequest;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
 import com.pragma.plazoleta.application.handler.IDishHandler;
@@ -74,7 +75,7 @@ public class DishHandler implements IDishHandler {
 
     @Override
     public List<DishResponseDto> getAllDishes() {
-        return dishResponseMapper.toResponseList(dishServicePort.getAllDishes());
+        return dishResponseMapper.toResponseList(dishServicePort.getAllDishes(), categoryServicePort.getAllCategories(), restaurantServicePort.getAllRestaurants());
     }
 
     @Override
@@ -112,7 +113,7 @@ public class DishHandler implements IDishHandler {
     }
 
     @Override
-    public List<DishResponseDto> getDishByRestaurantId(Long id) {
-        return dishResponseMapper.toResponseList(dishServicePort.getDishByRestaurantId(id));
+    public List<DishResponseDto> getDishByRestaurantId(ListPaginationRequest listPaginationRequest, Long id ) {
+        return dishResponseMapper.toResponseList(dishServicePort.getDishByRestaurantId(listPaginationRequest.getPageN(), listPaginationRequest.getSize(), id), categoryServicePort.getAllCategories(), restaurantServicePort.getAllRestaurants());
     }
 }
