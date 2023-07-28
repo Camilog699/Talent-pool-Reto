@@ -13,7 +13,7 @@ public interface IDishServicePort {
 
     List<Dish> getAllDishes();
 
-    List<Dish> getDishByRestaurantId(Long id);
+    List<Dish> getDishByRestaurantId(int page, int size, Long restaurantId);
 
     void updateDish(Dish dish);
 }
