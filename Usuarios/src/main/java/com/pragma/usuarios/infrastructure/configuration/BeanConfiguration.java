@@ -25,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.logging.Logger;
+
 @Configuration
 @RequiredArgsConstructor
 public class BeanConfiguration {
@@ -74,5 +76,10 @@ public class BeanConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public Logger logger() {
+        return Logger.getLogger("myLogger"); // "myLogger" is the name of your logger, you can choose any name you prefer
     }
 }

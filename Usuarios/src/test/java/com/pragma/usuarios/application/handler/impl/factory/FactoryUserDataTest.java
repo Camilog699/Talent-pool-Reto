@@ -16,11 +16,11 @@ public class FactoryUserDataTest {
     public static UserRequestDto getUserRequestDto(Long rolId) {
         UserRequestDto userRequestDto = new UserRequestDto();
 
-        userRequestDto.setName("Juan Sebastian");
-        userRequestDto.setLastname("Giraldo");
+        userRequestDto.setName("Juan Camilo");
+        userRequestDto.setLastname("Gomez");
         userRequestDto.setDocumentNumber("1193078576");
         userRequestDto.setPhone("+573148022302");
-        userRequestDto.setEmail("sebasgiraldov@gmail.com");
+        userRequestDto.setEmail("amraga10@gmail.com");
         userRequestDto.setPassword("1234");
         userRequestDto.setRoleId(rolId);
 
@@ -30,11 +30,11 @@ public class FactoryUserDataTest {
     public static UserResponseDto getUserResponseDto() {
         UserResponseDto userResponseDto = new UserResponseDto();
 
-        userResponseDto.setName("Juan Sebastian");
-        userResponseDto.setLastname("Giraldo");
+        userResponseDto.setName("Juan Camilo");
+        userResponseDto.setLastname("Gomez");
         userResponseDto.setDocumentNumber("1193078576");
         userResponseDto.setPhone("+573148022302");
-        userResponseDto.setEmail("sebasgiraldov@gmail.com");
+        userResponseDto.setEmail("amraga10@gmail.com");
         userResponseDto.setRoleId(getRolResponseDto());
 
         return userResponseDto;
@@ -44,11 +44,11 @@ public class FactoryUserDataTest {
         User userModel = new User();
 
         userModel.setId(1L);
-        userModel.setName("Juan Sebastian");
-        userModel.setLastname("Giraldo");
+        userModel.setName("Juan Camilo");
+        userModel.setLastname("Gomez");
         userModel.setDocumentNumber("1193078576");
         userModel.setPhone("+573148022302");
-        userModel.setEmail("sebasgiraldov@gmail.com");
+        userModel.setEmail("amraga10@gmail.com");
         userModel.setPassword("1234");
         userModel.setRoleId(getRolModel(roleId, rolName));
 
@@ -59,11 +59,11 @@ public class FactoryUserDataTest {
         UserEntity userEntity = new UserEntity();
 
         userEntity.setId(1L);
-        userEntity.setName("Juan Sebastian");
-        userEntity.setLastname("Giraldo");
+        userEntity.setName("Juan Camilo");
+        userEntity.setLastname("Gomez");
         userEntity.setDocumentNumber("1193078576");
         userEntity.setPhone("+573148022302");
-        userEntity.setEmail("sebasgiraldov@gmail.com");
+        userEntity.setEmail("amraga10@gmail.com");
         userEntity.setPassword("1234");
         userEntity.setRoleId(getRolEntity());
 
@@ -74,11 +74,11 @@ public class FactoryUserDataTest {
         UserEntity userEntity = new UserEntity();
 
         userEntity.setId(1L);
-        userEntity.setName("Juan Sebastian");
-        userEntity.setLastname("Giraldo");
+        userEntity.setName("Juan Camilo");
+        userEntity.setLastname("Gomez");
         userEntity.setDocumentNumber("1193078576");
         userEntity.setPhone("+573148022302");
-        userEntity.setEmail("sebasgiraldov2@gmail.com");
+        userEntity.setEmail("amraga10@gmail.com");
         userEntity.setPassword("1234");
         userEntity.setRoleId(userEntity.getRoleId());
 
@@ -134,11 +134,11 @@ public class FactoryUserDataTest {
     public static UserResponseDto getUserRequestDto() {
         UserResponseDto userRequestDto = new UserResponseDto();
 
-        userRequestDto.setName("Juan Sebastian");
-        userRequestDto.setLastname("Giraldo");
+        userRequestDto.setName("Juan Camilo");
+        userRequestDto.setLastname("Gomez");
         userRequestDto.setDocumentNumber("1193078576");
         userRequestDto.setPhone("+573148022302");
-        userRequestDto.setEmail("sebasgiraldov@gmail.com");
+        userRequestDto.setEmail("amraga10@gmail.com");
 
         return userRequestDto;
     }
@@ -146,11 +146,11 @@ public class FactoryUserDataTest {
     public static RegisterRequestDto getRegisterRequestDto() {
         RegisterRequestDto registerRequestDto = new RegisterRequestDto();
 
-        registerRequestDto.setName("Juan Sebastian");
-        registerRequestDto.setLastname("Giraldo");
+        registerRequestDto.setName("Juan Camilo");
+        registerRequestDto.setLastname("Gomez");
         registerRequestDto.setDocumentNumber("1193078576");
         registerRequestDto.setPhone("+573148022302");
-        registerRequestDto.setEmail("sebasgiraldov@gmail.com");
+        registerRequestDto.setEmail("amraga10@gmail.com");
         registerRequestDto.setPassword("1234");
 
         return registerRequestDto;

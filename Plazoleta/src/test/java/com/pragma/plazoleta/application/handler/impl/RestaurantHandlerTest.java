@@ -1,6 +1,7 @@
 package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.RestaurantRequestDto;
+import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.application.handler.impl.factory.FactoryRestaurantDataTest;
@@ -47,7 +48,7 @@ class RestaurantHandlerTest {
 
         RestaurantRequestDto restaurantRequestDto = FactoryRestaurantDataTest.getRestaurantRequestDto();
 
-        ResponseEntity<ResponseDto> response = FactoryRestaurantDataTest.getResponseEntity();
+        ResponseEntity<ResponseClientDto> response = FactoryRestaurantDataTest.getResponseEntity();
 
         RestaurantResponseDto restaurantResponseDto = FactoryRestaurantDataTest.getRestaurantResponseDto();
 

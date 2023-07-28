@@ -129,26 +129,26 @@ class UserHandlerTest {
     }
 
 /**
-    @Test
-    void throwNoDataFoundExceptionWhenAttempToRegisterAnEmployee(){
-        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
-        UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(3L);
-        User userModel = FactoryUserDataTest.getUserModel(3l, "ROLE_EMPLEADO");
-        UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
-        ResponseEntity<ResponseDto> response = FactoryUserDataTest.getResponseEntity();
-        UserEntity userEntity2 = FactoryUserDataTest.getUserEntity2();
+ @Test
+ void throwNoDataFoundExceptionWhenAttempToRegisterAnEmployee(){
+ RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+ UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(3L);
+ User userModel = FactoryUserDataTest.getUserModel(3l, "ROLE_EMPLEADO");
+ UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
+ ResponseEntity<ResponseDto> response = FactoryUserDataTest.getResponseEntity();
+ UserEntity userEntity2 = FactoryUserDataTest.getUserEntity2();
 
-        try(MockedStatic<FeignClientInterceptorImp> utilities = Mockito.mockStatic(FeignClientInterceptorImp.class)){
-            utilities.when(FeignClientInterceptorImp::getBearerTokenHeader).thenReturn("Bearer token");
-            Mockito.when(userServicePort.findUserByEmail(registerRequestDto.getEmail())).thenReturn(Optional.empty());
-            Mockito.when(jwtHandler.extractUserName(any())).thenReturn("sebasgiraldov2@gmail.com");
-            Mockito.when(userServicePort.findUserByEmail("sebasgiraldov2@gmail.com")).thenReturn(Optional.empty());
+ try(MockedStatic<FeignClientInterceptorImp> utilities = Mockito.mockStatic(FeignClientInterceptorImp.class)){
+ utilities.when(FeignClientInterceptorImp::getBearerTokenHeader).thenReturn("Bearer token");
+ Mockito.when(userServicePort.findUserByEmail(registerRequestDto.getEmail())).thenReturn(Optional.empty());
+ Mockito.when(jwtHandler.extractUserName(any())).thenReturn("sebasgiraldov2@gmail.com");
+ Mockito.when(userServicePort.findUserByEmail("sebasgiraldov2@gmail.com")).thenReturn(Optional.empty());
 
-            Assertions.assertThrows(
-                    NoDataFoundException.class,
-                    () -> userHandler.registerEmployee(registerRequestDto, 3L)
-            );
-        }
-    }
-    */
+ Assertions.assertThrows(
+ NoDataFoundException.class,
+ () -> userHandler.registerEmployee(registerRequestDto, 3L)
+ );
+ }
+ }
+ */
 }

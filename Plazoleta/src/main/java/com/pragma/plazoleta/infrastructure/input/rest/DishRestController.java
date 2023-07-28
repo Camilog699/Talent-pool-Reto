@@ -1,6 +1,7 @@
 package com.pragma.plazoleta.infrastructure.input.rest;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
+import com.pragma.plazoleta.application.dto.request.DishUpdateRequestDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
@@ -15,12 +16,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/dish")
 @RequiredArgsConstructor
+
 public class DishRestController {
 
     private final IDishHandler dishHandler;
@@ -35,8 +37,10 @@ public class DishRestController {
     @Operation(summary = "Save new dish")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Dish created", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Dish already exists", content = @Content)
+            @ApiResponse(responseCode = "409", description = "Dish already exists", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Not enough privileges", content = @Content)
     })
+    @RolesAllowed("ROLE_PROPIETARIO")
     @PostMapping("/")
     public ResponseEntity<ResponseDto> saveDish(@Valid @RequestBody DishRequestDto dishRequestDto,
                                                 BindingResult bindingResult) {
@@ -55,22 +59,22 @@ public class DishRestController {
 
         } catch (CategoryNotFoundException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("No se encontró la categoria");
+            responseDto.setMessage("Category not found");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
         } catch (RestaurantNotFoundException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("No se encontró el restaurante");
+            responseDto.setMessage("Restaurant not found");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("No tienes suficientes privilegios para realizar esta accion");
+            responseDto.setMessage("You don't have enough privileges to perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (Exception ex) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -96,7 +100,7 @@ public class DishRestController {
             @ApiResponse(responseCode = "404", description = "Dish not found", content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto> updateDish(@PathVariable Long id, @RequestBody DishRequestDto dishRequestDto,
+    public ResponseEntity<ResponseDto> updateDish(@PathVariable Long id, @RequestBody DishUpdateRequestDto dishUpdateRequestDto,
                                                   BindingResult bindingResult) {
 
         ResponseDto responseDto = new ResponseDto();
@@ -106,18 +110,18 @@ public class DishRestController {
         }
 
         try {
-            DishResponseDto dishResponseDto = dishHandler.updateDish(id, dishRequestDto);
+            DishResponseDto dishResponseDto = dishHandler.updateDish(id, dishUpdateRequestDto);
             responseDto.setError(false);
             responseDto.setMessage(null);
             responseDto.setData(dishResponseDto);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("No tienes suficientes privilegios para realizar esta accion");
+            responseDto.setMessage("You don't have enough privileges to perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (Exception ex) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -126,11 +130,12 @@ public class DishRestController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "Enable dish")
+    @Operation(summary = "Enable or disable an dish")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Dish enabled", content = @Content),
             @ApiResponse(responseCode = "404", description = "Dish not found", content = @Content)
     })
+    @RolesAllowed({"ROLE_PROPIETARIO"})
     @PutMapping("/enable/{id}")
     public ResponseEntity<ResponseDto> enableDish(@PathVariable Long id) {
 
@@ -143,12 +148,12 @@ public class DishRestController {
             responseDto.setData(dishResponseDto);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("No tienes suficientes privilegios para realizar esta accion");
+            responseDto.setMessage("You don't have enough privileges to perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (Exception ex) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -172,7 +177,7 @@ public class DishRestController {
         List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
 
         responseDto.setError(true);
-        responseDto.setMessage("Error en las validaciones");
+        responseDto.setMessage("Validation errors");
         responseDto.setData(errors);
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

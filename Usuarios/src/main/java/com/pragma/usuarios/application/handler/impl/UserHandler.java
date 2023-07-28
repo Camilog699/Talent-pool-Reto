@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class UserHandler implements IUserHandler {
     private final AuthenticationManager authenticationManager;
     private final IJwtHandler jwtHandler;
     private final IPlazoletaFeignClient plazoletaFeignClient;
+
 
     @Override
     public UserResponseDto register(UserRequestDto userRequestDto) {
