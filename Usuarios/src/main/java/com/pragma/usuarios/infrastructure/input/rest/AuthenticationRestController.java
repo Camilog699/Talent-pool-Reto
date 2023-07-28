@@ -53,12 +53,12 @@ public class AuthenticationRestController {
             responseDto.setData(userResponseDto);
         } catch (EmailAlreadyExistsException exception) {
             responseDto.setError(true);
-            responseDto.setMessage("El email ingresado ya está en uso");
+            responseDto.setMessage("Email already exists");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -95,12 +95,12 @@ public class AuthenticationRestController {
             responseDto.setData(userResponseDto);
         } catch (EmailAlreadyExistsException exception) {
             responseDto.setError(true);
-            responseDto.setMessage("El email ingresado ya está en uso");
+            responseDto.setMessage("Email already exists");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor"+ exception);
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -113,7 +113,7 @@ public class AuthenticationRestController {
         List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
 
         responseDto.setError(true);
-        responseDto.setMessage("Error en las validaciones");
+        responseDto.setMessage("Validation errors");
         responseDto.setData(errors);
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

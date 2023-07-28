@@ -1,6 +1,7 @@
 package com.pragma.plazoleta.application.handler.impl.factory;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
+import com.pragma.plazoleta.application.dto.request.DishUpdateRequestDto;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.dto.response.CategoryResponseDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
@@ -139,17 +140,14 @@ public class FactoryDishDataTest {
         return restaurantModel;
     }
 
-    /**
+
     public static DishUpdateRequestDto getDishUpdateRequest(){
         DishUpdateRequestDto dishUpdateRequestDto = new DishUpdateRequestDto();
-
-        dishUpdateRequestDto.setId(1L);
         dishUpdateRequestDto.setDescription("restaurante2");
-        dishUpdateRequestDto.setPrice(300);
+        dishUpdateRequestDto.setPrice(300L);
 
         return dishUpdateRequestDto;
     }
-     */
 
     public static DishResponseDto getDishUpdateResponseDto() {
         DishResponseDto dishResponseDto = new DishResponseDto();

@@ -1,5 +1,6 @@
 package com.pragma.plazoleta.infrastructure.input.rest.client;
 
+import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "Usuario", path = "/api/v1/user", url = "http://localhost:8081")
 public interface IUserFeignClient {
     @GetMapping("/{id}")
-    ResponseEntity<ResponseDto> getUserById(@PathVariable Long idUser);
+    ResponseEntity<ResponseClientDto> getUserById(@PathVariable Long id);
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<ResponseDto> getByEmail(@PathVariable String email);
+    ResponseEntity<ResponseClientDto> getByEmail(@PathVariable String email);
 
 }

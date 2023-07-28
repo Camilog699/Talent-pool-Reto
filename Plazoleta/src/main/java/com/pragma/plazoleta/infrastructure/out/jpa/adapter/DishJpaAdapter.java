@@ -3,6 +3,7 @@ package com.pragma.plazoleta.infrastructure.out.jpa.adapter;
 import com.pragma.plazoleta.domain.model.Dish;
 import com.pragma.plazoleta.domain.model.Restaurant;
 import com.pragma.plazoleta.domain.spi.IDishPersistencePort;
+import com.pragma.plazoleta.infrastructure.exception.DishNotFoundException;
 import com.pragma.plazoleta.infrastructure.exception.NoDataFoundException;
 import com.pragma.plazoleta.infrastructure.exception.RestaurantNotFoundException;
 import com.pragma.plazoleta.infrastructure.out.jpa.entity.DishEntity;
@@ -29,7 +30,7 @@ public class DishJpaAdapter implements IDishPersistencePort {
 
     @Override
     public Dish getById(Long dishId) {
-        return dishEntityMapper.toDishModel(dishRepository.findById(dishId).orElseThrow(RestaurantNotFoundException::new));
+        return dishEntityMapper.toDishModel(dishRepository.findById(dishId).orElseThrow(DishNotFoundException::new));
     }
 
     @Override

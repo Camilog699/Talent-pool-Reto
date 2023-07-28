@@ -20,13 +20,21 @@ import com.pragma.plazoleta.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
 import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IDishEntityMapper;
 import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IEmployeeEntityMapper;
 import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
-import com.pragma.plazoleta.infrastructure.out.jpa.repository.ICategoryRepository;
-import com.pragma.plazoleta.infrastructure.out.jpa.repository.IDishRepository;
-import com.pragma.plazoleta.infrastructure.out.jpa.repository.IEmployeeRepository;
-import com.pragma.plazoleta.infrastructure.out.jpa.repository.IRestaurantRepository;
+import com.pragma.plazoleta.infrastructure.out.jpa.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.logging.Logger;
 
 @Configuration
 @RequiredArgsConstructor
@@ -39,7 +47,7 @@ public class BeanConfiguration {
     private final ICategoryEntityMapper categoryEntityMapper;
     private final IEmployeeRepository employeeRepository;
     private final IEmployeeEntityMapper employeeEntityMapper;
-
+    private final IUserRepository userRepository;
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
         return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
@@ -78,5 +86,33 @@ public class BeanConfiguration {
     @Bean
     public IEmployeeServicePort employeeServicePort() {
         return new EmployeeUseCase(employeePersistencePort());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> (UserDetails) userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public Logger logger() {
+        return Logger.getLogger("myLogger"); // "myLogger" is the name of your logger, you can choose any name you prefer
     }
 }

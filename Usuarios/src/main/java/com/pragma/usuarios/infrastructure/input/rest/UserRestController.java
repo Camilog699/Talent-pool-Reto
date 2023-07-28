@@ -10,13 +10,11 @@ import com.pragma.usuarios.application.handler.IUserHandler;
 import com.pragma.usuarios.infrastructure.exception.EmailAlreadyExistsException;
 import com.pragma.usuarios.infrastructure.exception.NoDataFoundException;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -53,12 +51,12 @@ public class UserRestController {
             responseDto.setData(userResponseDto);
         } catch (EmailAlreadyExistsException exception) {
             responseDto.setError(true);
-            responseDto.setMessage("El email ingresado ya está en uso");
+            responseDto.setMessage("Email already exists");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -86,12 +84,12 @@ public class UserRestController {
             responseDto.setData(userResponseDto);
         } catch (EmailAlreadyExistsException exception) {
             responseDto.setError(true);
-            responseDto.setMessage("El email ingresado ya está en uso");
+            responseDto.setMessage("Email already exists");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
         } catch (Exception exception) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno del servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -119,21 +117,22 @@ public class UserRestController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getUserById(@PathVariable Long idUser) {
+    public ResponseEntity<ResponseDto> getUserById(@PathVariable Long id) {
         ResponseDto responseDto = new ResponseDto();
+        Long userId = Long.parseLong(String.valueOf(id));
         try {
-            userHandler.getById(idUser);
+            userHandler.getById(userId);
             responseDto.setError(false);
             responseDto.setMessage(null);
-            responseDto.setData(userHandler.getById(idUser));
+            responseDto.setData(userHandler.getById(userId));
         } catch (NoDataFoundException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("Usuario No encontrado");
+            responseDto.setMessage("User not found");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno en el servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -151,12 +150,12 @@ public class UserRestController {
             responseDto.setData(userHandler.getByEmail(email));
         } catch (NoDataFoundException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("Usuario No encontrado");
+            responseDto.setMessage("User not found");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             responseDto.setError(true);
-            responseDto.setMessage("Error interno en el servidor");
+            responseDto.setMessage("Internal server error");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -168,7 +167,7 @@ public class UserRestController {
         List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
 
         responseDto.setError(true);
-        responseDto.setMessage("Error en las validaciones");
+        responseDto.setMessage("Validation errors");
         responseDto.setData(errors);
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);

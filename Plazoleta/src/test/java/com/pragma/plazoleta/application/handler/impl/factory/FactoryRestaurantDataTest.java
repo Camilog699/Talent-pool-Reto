@@ -4,6 +4,7 @@ package com.pragma.plazoleta.application.handler.impl.factory;
 import com.pragma.plazoleta.application.dto.request.RestaurantRequestDto;
 import com.pragma.plazoleta.application.dto.request.RoleRequestDto;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
+import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.domain.model.Restaurant;
@@ -121,8 +122,8 @@ public class FactoryRestaurantDataTest {
         return rolRequestDto;
     }
 
-    public static ResponseDto getResponseClientDto() {
-        ResponseDto responseClientDto = new ResponseDto();
+    public static ResponseClientDto getResponseClientDto() {
+        ResponseClientDto responseClientDto = new ResponseClientDto();
 
         responseClientDto.setMessage("");
         responseClientDto.setError(false);
@@ -131,8 +132,8 @@ public class FactoryRestaurantDataTest {
         return responseClientDto;
     }
 
-    public static ResponseEntity<ResponseDto> getResponseEntity() {
-        ResponseDto responseClientDto = getResponseClientDto();
+    public static ResponseEntity<ResponseClientDto> getResponseEntity() {
+        ResponseClientDto responseClientDto = getResponseClientDto();
         return new ResponseEntity<>(responseClientDto, HttpStatus.FOUND);
     }
 

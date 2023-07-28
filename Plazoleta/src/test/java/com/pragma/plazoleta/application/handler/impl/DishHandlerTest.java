@@ -1,10 +1,13 @@
 package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.DishRequestDto;
+import com.pragma.plazoleta.application.dto.request.DishUpdateRequestDto;
 import com.pragma.plazoleta.application.dto.response.CategoryResponseDto;
 import com.pragma.plazoleta.application.dto.response.DishResponseDto;
+import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.application.handler.impl.factory.FactoryDishDataTest;
+import com.pragma.plazoleta.application.handler.impl.factory.FactoryRestaurantDataTest;
 import com.pragma.plazoleta.application.mapper.*;
 import com.pragma.plazoleta.domain.api.ICategoryServicePort;
 import com.pragma.plazoleta.domain.api.IDishServicePort;
@@ -12,6 +15,7 @@ import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
 import com.pragma.plazoleta.domain.model.Category;
 import com.pragma.plazoleta.domain.model.Dish;
 import com.pragma.plazoleta.domain.model.Restaurant;
+import com.pragma.plazoleta.infrastructure.exception.NotEnoughPrivilegesException;
 import com.pragma.plazoleta.infrastructure.exception.NotUpdatableFieldsException;
 import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -72,9 +77,26 @@ class DishHandlerTest {
     }
 
     @Test
-    void mustUpdateADish() {
-        Dish dish = FactoryDishDataTest.getDishModel2();
+    void throwNotEnoughPrivilegesWhereGetUserIsNotEqualsToOwnerId() {
+        ResponseEntity<ResponseClientDto> response = FactoryRestaurantDataTest.getResponseEntity();
+        Restaurant restaurantModelIncorrectId = FactoryDishDataTest.getRestaurantModelIncorrectId();
         DishRequestDto dishRequestDto = FactoryDishDataTest.getDishRequestDto();
+
+        when(userClient.getUserById(any())).thenReturn(response);
+        when(restaurantServicePort.getById(any())).thenReturn(restaurantModelIncorrectId);
+
+        Assertions.assertThrows(
+                NotEnoughPrivilegesException.class,
+                () -> dishHandler.saveDish(dishRequestDto)
+        );
+    }
+
+
+
+    @Test
+    void mustUpdateADish() {
+        Dish dish = FactoryDishDataTest.getDishModel();
+        DishUpdateRequestDto dishRequestDto = FactoryDishDataTest.getDishUpdateRequest();
         CategoryResponseDto categoryResponseDto = FactoryDishDataTest.getCategoryResponseDto();
         RestaurantResponseDto restaurantResponseDto = FactoryDishDataTest.getRestaurantResponseDto();
         DishResponseDto dishResponseDto = FactoryDishDataTest.getDishUpdateResponseDto();
