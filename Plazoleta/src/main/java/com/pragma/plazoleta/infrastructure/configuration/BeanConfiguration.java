@@ -1,25 +1,10 @@
 package com.pragma.plazoleta.infrastructure.configuration;
 
-import com.pragma.plazoleta.domain.api.ICategoryServicePort;
-import com.pragma.plazoleta.domain.api.IDishServicePort;
-import com.pragma.plazoleta.domain.api.IEmployeeServicePort;
-import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
-import com.pragma.plazoleta.domain.spi.ICategoryPersistencePort;
-import com.pragma.plazoleta.domain.spi.IDishPersistencePort;
-import com.pragma.plazoleta.domain.spi.IEmployeePersistencePort;
-import com.pragma.plazoleta.domain.spi.IRestaurantPersistencePort;
-import com.pragma.plazoleta.domain.usecase.CategoryUseCase;
-import com.pragma.plazoleta.domain.usecase.DishUseCase;
-import com.pragma.plazoleta.domain.usecase.EmployeeUseCase;
-import com.pragma.plazoleta.domain.usecase.RestaurantUseCase;
-import com.pragma.plazoleta.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
-import com.pragma.plazoleta.infrastructure.out.jpa.adapter.DishJpaAdapter;
-import com.pragma.plazoleta.infrastructure.out.jpa.adapter.EmployeeJpaAdapter;
-import com.pragma.plazoleta.infrastructure.out.jpa.adapter.RestaurantJpaAdapter;
-import com.pragma.plazoleta.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
-import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IDishEntityMapper;
-import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IEmployeeEntityMapper;
-import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
+import com.pragma.plazoleta.domain.api.*;
+import com.pragma.plazoleta.domain.spi.*;
+import com.pragma.plazoleta.domain.usecase.*;
+import com.pragma.plazoleta.infrastructure.out.jpa.adapter.*;
+import com.pragma.plazoleta.infrastructure.out.jpa.mapper.*;
 import com.pragma.plazoleta.infrastructure.out.jpa.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +33,10 @@ public class BeanConfiguration {
     private final IEmployeeRepository employeeRepository;
     private final IEmployeeEntityMapper employeeEntityMapper;
     private final IUserRepository userRepository;
+    private final IOrderRepository orderRepository;
+    private final IOrderEntityMapper orderEntityMapper;
+    private final IOrderDishRepository orderDishRepository;
+    private final IOrderDishEntityMapper orderDishEntityMapper;
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
         return new RestaurantJpaAdapter(restaurantRepository, restaurantEntityMapper);
@@ -86,6 +75,26 @@ public class BeanConfiguration {
     @Bean
     public IEmployeeServicePort employeeServicePort() {
         return new EmployeeUseCase(employeePersistencePort());
+    }
+
+    @Bean
+    public IOrderServicePort orderServicePort () {
+        return new OrderUseCase(orderPersistencePort());
+    }
+
+    @Bean
+    public IOrderPersistencePort orderPersistencePort() {
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper);
+    }
+
+    @Bean
+    public IOrderDishServicePort orderDishServicePort () {
+        return new OrderDishUseCase(orderDishPersistencePort());
+    }
+
+    @Bean
+    public IOrderDishPersistencePort orderDishPersistencePort() {
+        return new OrderDishJpaAdapter(orderDishRepository, orderDishEntityMapper);
     }
 
     @Bean

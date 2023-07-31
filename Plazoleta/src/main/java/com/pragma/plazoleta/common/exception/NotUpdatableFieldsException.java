@@ -1,4 +1,4 @@
-package com.pragma.plazoleta.infrastructure.exception;
+package com.pragma.plazoleta.common.exception;
 
 public class NotUpdatableFieldsException extends RuntimeException {
     public NotUpdatableFieldsException() {
