@@ -31,8 +31,8 @@ public class OrderUseCase implements IOrderServicePort {
     }
 
     @Override
-    public void updateOrder(Order order, Long idOrder) {
-        orderPersistencePort.updateOrder(order, idOrder);
+    public void updateOrder(Order order, Long orderId) {
+        orderPersistencePort.updateOrder(order, orderId);
     }
 
 }

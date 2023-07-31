@@ -14,5 +14,5 @@ public interface IOrderServicePort {
 
     List<Order> getAllOrdersByOrderState(OrderState orderState, Long restaurantId);
 
-    void updateOrder(Order order, Long idOrder);
+    void updateOrder(Order order, Long orderId);
 }

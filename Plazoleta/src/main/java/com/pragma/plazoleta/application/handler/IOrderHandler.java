@@ -15,7 +15,8 @@ public interface IOrderHandler {
 
     List<OrderStateResponseDto> getAllOrdersByOrderState(OrderState orderState);
 
-    /*
-    OrderResponseDto updateOrder(Order order, Long idOrder);
-    */
+    OrderResponseDto updateOrder(Order order, Long orderId);
+
+    OrderResponseDto assignOrderToEmployee(Long orderId);
+
 }
