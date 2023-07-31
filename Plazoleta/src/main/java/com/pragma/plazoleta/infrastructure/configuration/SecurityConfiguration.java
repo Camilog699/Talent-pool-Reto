@@ -39,4 +39,14 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/get/{orderState}").hasRole("ROLE_EMPLEADO")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().permitAll()
+                .and()
+                .csrf().disable();
+    }
+
 }

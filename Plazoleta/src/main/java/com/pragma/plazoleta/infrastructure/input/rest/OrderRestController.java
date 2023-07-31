@@ -8,6 +8,7 @@ import com.pragma.plazoleta.application.handler.IOrderHandler;
 import com.pragma.plazoleta.common.OrderState;
 import com.pragma.plazoleta.common.exception.CategoryNotFoundException;
 import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesException;
+import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesForThisRestaurantException;
 import com.pragma.plazoleta.common.exception.RestaurantNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,7 +97,7 @@ public class OrderRestController {
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = OrderResponseDto.class)))),
     })
-    @RolesAllowed({"ROLE_EMPLEADO"})
+    @PreAuthorize("hasRole('ROLE_EMPLEADO')")
     @GetMapping("/get/{orderState}")
     public ResponseEntity<ResponseDto> getOrderByOrderState(@PathVariable OrderState orderState) {
         ResponseDto responseDto = new ResponseDto();
@@ -117,6 +119,46 @@ public class OrderRestController {
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Assign order to employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Order assigned",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrderResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Order not found",
+                    content = {@Content(mediaType = "application/json")}),
+    })
+    @PutMapping("/assign/{id}")
+    public ResponseEntity<ResponseDto> assignOrderToEmployee(@PathVariable Long id) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            OrderResponseDto orderResponseDto = orderHandler.assignOrderToEmployee(id);
+            responseDto.setError(false);
+            responseDto.setMessage(null);
+            responseDto.setData(orderResponseDto);
+        } catch (NotEnoughPrivilegesException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (NotEnoughPrivilegesForThisRestaurantException ex) {
+        responseDto.setError(true);
+        responseDto.setMessage("You don't have enough privileges to perform this action in this restaurant");
+        responseDto.setData(null);
+        return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+    }
+    catch (Exception ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Internal server error");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

@@ -10,6 +10,7 @@ import com.pragma.plazoleta.application.handler.IOrderHandler;
 import com.pragma.plazoleta.application.mapper.*;
 import com.pragma.plazoleta.common.OrderState;
 import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesException;
+import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesForThisRestaurantException;
 import com.pragma.plazoleta.domain.api.*;
 import com.pragma.plazoleta.domain.model.*;
 import com.pragma.plazoleta.infrastructure.configuration.FeignClientInterceptorImp;
@@ -34,6 +35,7 @@ public class OrderHandler implements IOrderHandler {
     private final IOrderServicePort orderServicePort;
     private final IRestaurantServicePort restaurantServicePort;
     private final IOrderResponseMapper orderResponseMapper;
+    private final IOrderDishResponseMapper orderDishResponseMapper;
     private final IUserFeignClient userClient;
     private final IJwtHandler jwtHandler;
     private final IDishServicePort dishServicePort;
@@ -92,14 +94,40 @@ public class OrderHandler implements IOrderHandler {
         return orderResponseMapper.toResponseList(orderServicePort.getAllOrdersByOrderState(orderState, employeeModel.getRestaurantId().getId()), restaurantServicePort.getAllRestaurants(), orderDishServicePort.getAllOrderDish());
     }
 
-    /**
     @Override
-    public OrderResponseDto updateOrder(Order order, Long idOrder) {
-        Order orderModel = orderServicePort.getById(idOrder);
-        order.
-        orderServicePort.updateOrder(order, idOrder);
-        return orderResponseMapper.toResponse(orderResponse, orderDishServicePort.getAllOrderDishByOrderId(idOrder));
+    public OrderResponseDto updateOrder(Order order, Long orderId) {
+        Order orderModel = orderServicePort.getById(orderId);
+        orderModel.setChefId(order.getChefId());
+        orderModel.setDate(order.getDate());
+        orderModel.setStatus(order.getStatus());
+
+        orderServicePort.updateOrder(order, orderId);
+
+        List<OrderDish> orderDishModelList = orderDishServicePort.getAllOrderDishByOrder(orderId);
+        List<OrderDishResponseDto> orderDishResponseDtoList = orderDishModelList.stream().map(orderDishResponseMapper::toResponse).collect(Collectors.toList());
+        return orderResponseMapper.toResponse(order, orderDishResponseDtoList);
     }
-    */
+
+    @Override
+    public OrderResponseDto assignOrderToEmployee(Long orderId){
+        String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
+        String splited[] = tokenHeader.split("\\s+");
+        String email = jwtHandler.extractUserName(splited[1]);
+        UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getByEmail(email).getBody()).getData();
+        Employee employeeModel = employeeServicePort.getRestaurantByEmployeeId(userRequestDto.getId());
+        if (employeeModel == null) {
+            throw new NotEnoughPrivilegesException();
+        }
+        if (!Objects.equals(orderServicePort.getById(orderId).getRestaurantId().getId(), employeeModel.getRestaurantId().getId())) {
+            throw new NotEnoughPrivilegesForThisRestaurantException();
+        }
+        Order orderModel = orderServicePort.getById(orderId);
+
+        orderModel.setChefId(userRequestMapper.toUser(userRequestDto));
+        orderModel.setStatus(OrderState.EN_PREPARACION);
+        return updateOrder(orderModel, orderId);
+    }
+
+
 
 }
