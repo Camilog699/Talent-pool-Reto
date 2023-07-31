@@ -4,7 +4,7 @@ import com.pragma.plazoleta.application.dto.request.EmployeeRequestDto;
 import com.pragma.plazoleta.application.dto.response.EmployeeResponseDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.handler.IEmployeeHandler;
-import com.pragma.plazoleta.infrastructure.exception.NotEnoughPrivilegesException;
+import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

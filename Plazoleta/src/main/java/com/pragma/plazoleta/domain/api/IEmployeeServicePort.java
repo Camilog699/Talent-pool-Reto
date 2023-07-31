@@ -8,4 +8,6 @@ public interface IEmployeeServicePort {
 
     Employee getById(Long employeeId);
 
+    Employee getRestaurantByEmployeeId(Long employeeId);
+
 }

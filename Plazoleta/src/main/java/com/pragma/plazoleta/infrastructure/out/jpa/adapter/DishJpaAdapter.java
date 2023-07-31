@@ -2,8 +2,8 @@ package com.pragma.plazoleta.infrastructure.out.jpa.adapter;
 
 import com.pragma.plazoleta.domain.model.Dish;
 import com.pragma.plazoleta.domain.spi.IDishPersistencePort;
-import com.pragma.plazoleta.infrastructure.exception.DishNotFoundException;
-import com.pragma.plazoleta.infrastructure.exception.NoDataFoundException;
+import com.pragma.plazoleta.common.exception.DishNotFoundException;
+import com.pragma.plazoleta.common.exception.NoDataFoundException;
 import com.pragma.plazoleta.infrastructure.out.jpa.entity.DishEntity;
 import com.pragma.plazoleta.infrastructure.out.jpa.mapper.IDishEntityMapper;
 import com.pragma.plazoleta.infrastructure.out.jpa.repository.IDishRepository;

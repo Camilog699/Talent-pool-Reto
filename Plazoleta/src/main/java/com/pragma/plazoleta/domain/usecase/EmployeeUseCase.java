@@ -23,6 +23,9 @@ public class EmployeeUseCase implements IEmployeeServicePort {
         return employeePersistencePort.getById(employeeId);
     }
 
-
+    @Override
+    public Employee getRestaurantByEmployeeId(Long employeeId) {
+        return employeePersistencePort.getRestaurantByEmployeeId(employeeId);
+    }
 
 }

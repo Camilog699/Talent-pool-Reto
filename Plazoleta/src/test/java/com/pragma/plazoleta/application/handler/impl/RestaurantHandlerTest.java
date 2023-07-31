@@ -2,14 +2,13 @@ package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.RestaurantRequestDto;
 import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
-import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.application.handler.impl.factory.FactoryRestaurantDataTest;
 import com.pragma.plazoleta.application.mapper.IRestaurantRequestMapper;
 import com.pragma.plazoleta.application.mapper.IRestaurantResponseMapper;
 import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
 import com.pragma.plazoleta.domain.model.Restaurant;
-import com.pragma.plazoleta.infrastructure.exception.OwnerIdNotFoundException;
+import com.pragma.plazoleta.common.exception.OwnerIdNotFoundException;
 import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

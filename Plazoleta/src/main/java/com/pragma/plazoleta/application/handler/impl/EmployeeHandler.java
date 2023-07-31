@@ -1,26 +1,18 @@
 package com.pragma.plazoleta.application.handler.impl;
 
 import com.pragma.plazoleta.application.dto.request.EmployeeRequestDto;
-import com.pragma.plazoleta.application.dto.request.RestaurantRequestDto;
 import com.pragma.plazoleta.application.dto.response.EmployeeResponseDto;
-import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoleta.application.handler.IEmployeeHandler;
-import com.pragma.plazoleta.application.handler.IRestaurantHandler;
 import com.pragma.plazoleta.application.mapper.IEmployeeRequestMapper;
 import com.pragma.plazoleta.application.mapper.IEmployeeResponseMapper;
-import com.pragma.plazoleta.application.mapper.IRestaurantRequestMapper;
-import com.pragma.plazoleta.application.mapper.IRestaurantResponseMapper;
 import com.pragma.plazoleta.domain.api.IEmployeeServicePort;
 import com.pragma.plazoleta.domain.api.IRestaurantServicePort;
 import com.pragma.plazoleta.domain.model.Employee;
 import com.pragma.plazoleta.domain.model.Restaurant;
-import com.pragma.plazoleta.infrastructure.exception.OwnerIdNotFoundException;
-import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
+import com.pragma.plazoleta.common.exception.OwnerIdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
