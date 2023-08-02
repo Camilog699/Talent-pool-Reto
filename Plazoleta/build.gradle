@@ -40,6 +40,7 @@ dependencies {
 	developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
 	testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.5'
+	testImplementation group: 'org.mockito', name: 'mockito-inline', version: '4.11.0'
 
 	runtimeOnly "mysql:mysql-connector-java:${mySqlConnectorVersion}"
 

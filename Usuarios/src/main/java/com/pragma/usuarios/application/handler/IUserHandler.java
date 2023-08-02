@@ -12,7 +12,7 @@ public interface IUserHandler {
 
       JwtResponseDto login(AuthenticationRequestDto authenticationRequestDto);
 
-    UserResponseDto registerOwner(UserRequestDto userRequestDto);
+    UserResponseDto registerOwner(RegisterRequestDto registerRequestDto);
 
     UserResponseDto registerEmployee(RegisterRequestDto registerRequestDto, Long restaurantId);
 
