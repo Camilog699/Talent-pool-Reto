@@ -132,7 +132,7 @@ public class FactoryDishDataTest {
         restaurantModel.setId(1L);
         restaurantModel.setName("Subway");
         restaurantModel.setAddress("Calle 5");
-        restaurantModel.setOwnerId(3l);
+        restaurantModel.setOwnerId(3L);
         restaurantModel.setPhone("+10000");
         restaurantModel.setUrlLogo("logoUrl");
         restaurantModel.setNit("20000");

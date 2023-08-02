@@ -18,6 +18,7 @@ import com.pragma.usuarios.domain.model.Role;
 import com.pragma.usuarios.domain.model.User;
 import com.pragma.usuarios.infrastructure.configuration.FeignClientInterceptorImp;
 import com.pragma.usuarios.infrastructure.exception.EmailAlreadyExistsException;
+import com.pragma.usuarios.infrastructure.exception.NoDataFoundException;
 import com.pragma.usuarios.infrastructure.input.rest.Plazoleta.IPlazoletaFeignClient;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -85,11 +86,12 @@ public class UserHandler implements IUserHandler {
     }
 
     @Override
-    public UserResponseDto registerOwner(UserRequestDto userRequestDto) {
-        if( userServicePort.findUserByEmail(userRequestDto.getEmail()).isPresent()){
+    public UserResponseDto registerOwner(RegisterRequestDto registerRequestDto) {
+        if( userServicePort.findUserByEmail(registerRequestDto.getEmail()).isPresent()){
             throw new EmailAlreadyExistsException();
         }
         Role role = roleServicePort.getRole(2L);
+        UserRequestDto userRequestDto = userRequestMapper.toUserRequestDto(registerRequestDto);
         User user = userRequestMapper.toUser(userRequestDto);
         user.setRoleId(role);
         User userPort = userServicePort.saveUser(user);
@@ -108,7 +110,7 @@ public class UserHandler implements IUserHandler {
         Optional<UserEntity> userEntityOptional = userServicePort.findUserByEmail(email);
 
         if(userEntityOptional.isEmpty()){
-            throw new NotFoundException("User not found");
+            throw new NoDataFoundException();
         }
         UserEntity owner = userEntityOptional.get();
 

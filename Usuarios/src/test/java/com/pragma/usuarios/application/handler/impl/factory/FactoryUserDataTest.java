@@ -78,7 +78,7 @@ public class FactoryUserDataTest {
         userEntity.setLastname("Gomez");
         userEntity.setDocumentNumber("1193078576");
         userEntity.setPhone("+573148022302");
-        userEntity.setEmail("amraga10@gmail.com");
+        userEntity.setEmail("email@gmail.com");
         userEntity.setPassword("1234");
         userEntity.setRoleId(userEntity.getRoleId());
 

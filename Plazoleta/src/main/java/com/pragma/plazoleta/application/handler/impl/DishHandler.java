@@ -60,7 +60,6 @@ public class DishHandler implements IDishHandler {
         if (category == null) {
             throw new CategoryNotFoundException();
         }
-        //Esta parte de handler
         dish.setActive(true);
         dish.setRestaurantId(restaurant);
         dish.setCategoryId(category);
@@ -97,6 +96,7 @@ public class DishHandler implements IDishHandler {
         return dishResponseMapper.toResponse(dish, categoryResponseMapper.toResponse(categoryServicePort.getById(dish.getCategoryId().getId())), restaurantResponseMapper.toResponse(restaurantServicePort.getById(dish.getRestaurantId().getId())));
     }
 
+    @Override
     public DishResponseDto enableDish(Long id){
         String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
         String[] split = tokenHeader.split("\\s+");
@@ -114,6 +114,9 @@ public class DishHandler implements IDishHandler {
 
     @Override
     public List<DishResponseDto> getDishByRestaurantId(ListPaginationRequest listPaginationRequest, Long id ) {
-        return dishResponseMapper.toResponseList(dishServicePort.getDishByRestaurantId(listPaginationRequest.getPageN(), listPaginationRequest.getSize(), id), categoryServicePort.getAllCategories(), restaurantServicePort.getAllRestaurants());
+        return dishResponseMapper.toResponseList(dishServicePort.getDishByRestaurantId(listPaginationRequest.getPageN(),
+                listPaginationRequest.getSize(), id),
+                categoryServicePort.getAllCategories(),
+                restaurantServicePort.getAllRestaurants());
     }
 }

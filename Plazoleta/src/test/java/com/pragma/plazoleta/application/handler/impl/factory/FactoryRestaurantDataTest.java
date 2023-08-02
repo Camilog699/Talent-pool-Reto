@@ -7,6 +7,7 @@ import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.dto.response.ResponseClientDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.dto.response.RestaurantResponseDto;
+import com.pragma.plazoleta.domain.model.Employee;
 import com.pragma.plazoleta.domain.model.Restaurant;
 import com.pragma.plazoleta.domain.model.User;
 import org.springframework.http.HttpStatus;
@@ -150,5 +151,15 @@ public class FactoryRestaurantDataTest {
         userModel.setRoleId(null);
 
         return userModel;
+    }
+
+    public static Employee getRestaurantEmployeeModel() {
+        Employee restaurantEmployeeModel = new Employee();
+
+        restaurantEmployeeModel.setRestaurantId(getRestaurantModel());
+        restaurantEmployeeModel.setEmployeeId(getUserModel());
+        restaurantEmployeeModel.setField("");
+
+        return restaurantEmployeeModel;
     }
 }

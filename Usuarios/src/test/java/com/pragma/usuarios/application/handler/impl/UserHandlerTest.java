@@ -15,6 +15,7 @@ import com.pragma.usuarios.domain.api.IUserServicePort;
 import com.pragma.usuarios.domain.model.User;
 import com.pragma.usuarios.infrastructure.configuration.FeignClientInterceptorImp;
 import com.pragma.usuarios.infrastructure.exception.EmailAlreadyExistsException;
+import com.pragma.usuarios.infrastructure.exception.NoDataFoundException;
 import com.pragma.usuarios.infrastructure.input.rest.Plazoleta.IPlazoletaFeignClient;
 import com.pragma.usuarios.infrastructure.out.jpa.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
@@ -88,6 +89,41 @@ class UserHandlerTest {
         );
     }
 
+
+    @Test
+    void mustRegisterAnOwner(){
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+        UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(2L);
+        User userModel = FactoryUserDataTest.getUserModel(2l, "ROLE_PROPIETARIO");
+        UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
+
+        Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.empty());
+        Mockito.when(userRequestMapper.toUserRequestDto(any())).thenReturn(userRequestDto);
+        Mockito.when(userRequestMapper.toUser(any())).thenReturn(userModel);
+        Mockito.when(rolServicePort.getRole(any())).thenReturn(userModel.getRoleId());
+        Mockito.when(userResponseMapper.toResponse(any(), any())).thenReturn(userResponseDto);
+
+        Assertions.assertEquals(userResponseDto, userHandler.registerOwner(registerRequestDto));
+
+        Mockito.verify(userServicePort).saveUser(any(User.class));
+
+    }
+
+
+    @Test
+    void throwEmailAlreadyTakenExceptionWhenAttemptToRegisterAnOwner() {
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+        UserEntity userEntity = FactoryUserDataTest.getUserEntity();
+
+        Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.of(userEntity));
+
+        Assertions.assertThrows(
+                EmailAlreadyExistsException.class,
+                () -> userHandler.registerOwner(registerRequestDto)
+        );
+    }
+
+
     @Test
     void mustRegisterAnEmployee(){
         RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
@@ -100,8 +136,8 @@ class UserHandlerTest {
         try(MockedStatic<FeignClientInterceptorImp> utilities = Mockito.mockStatic(FeignClientInterceptorImp.class)){
             utilities.when(FeignClientInterceptorImp::getBearerTokenHeader).thenReturn("Bearer token");
             Mockito.when(userServicePort.findUserByEmail(registerRequestDto.getEmail())).thenReturn(Optional.empty());
-            Mockito.when(jwtHandler.extractUserName(any())).thenReturn("sebasgiraldov2@gmail.com");
-            Mockito.when(userServicePort.findUserByEmail("sebasgiraldov2@gmail.com")).thenReturn(Optional.of(userEntity2));
+            Mockito.when(jwtHandler.extractUserName(any())).thenReturn("amraga11@gmail.com");
+            Mockito.when(userServicePort.findUserByEmail("amraga11@gmail.com")).thenReturn(Optional.of(userEntity2));
             Mockito.when(userServicePort.saveUser(any())).thenReturn(userModel);
             Mockito.when(userRequestMapper.toUserRequestDto(any())).thenReturn(userRequestDto);
             Mockito.when(userRequestMapper.toUser(any())).thenReturn(userModel);
@@ -127,28 +163,68 @@ class UserHandlerTest {
                 () -> userHandler.registerEmployee(registerRequestDto, 3L)
         );
     }
+    @Test
+    void throwEmailAlreadyTakenExceptionWhenAttempToRegisterAnEmployee(){
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+        UserEntity userEntity = FactoryUserDataTest.getUserEntity();
 
-/**
- @Test
- void throwNoDataFoundExceptionWhenAttempToRegisterAnEmployee(){
- RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
- UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(3L);
- User userModel = FactoryUserDataTest.getUserModel(3l, "ROLE_EMPLEADO");
- UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
- ResponseEntity<ResponseDto> response = FactoryUserDataTest.getResponseEntity();
- UserEntity userEntity2 = FactoryUserDataTest.getUserEntity2();
+        Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.of(userEntity));
 
- try(MockedStatic<FeignClientInterceptorImp> utilities = Mockito.mockStatic(FeignClientInterceptorImp.class)){
- utilities.when(FeignClientInterceptorImp::getBearerTokenHeader).thenReturn("Bearer token");
- Mockito.when(userServicePort.findUserByEmail(registerRequestDto.getEmail())).thenReturn(Optional.empty());
- Mockito.when(jwtHandler.extractUserName(any())).thenReturn("sebasgiraldov2@gmail.com");
- Mockito.when(userServicePort.findUserByEmail("sebasgiraldov2@gmail.com")).thenReturn(Optional.empty());
+        Assertions.assertThrows(
+                EmailAlreadyExistsException.class,
+                () -> userHandler.registerEmployee(registerRequestDto, 3L)
+        );
+    }
 
- Assertions.assertThrows(
- NoDataFoundException.class,
- () -> userHandler.registerEmployee(registerRequestDto, 3L)
- );
- }
- }
- */
+
+    @Test
+    void throwNoDataFoundExceptionWhenAttempToRegisterAnEmployee(){
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+
+        try(MockedStatic<FeignClientInterceptorImp> utilities = Mockito.mockStatic(FeignClientInterceptorImp.class)){
+            utilities.when(FeignClientInterceptorImp::getBearerTokenHeader).thenReturn("Bearer token");
+            Mockito.when(userServicePort.findUserByEmail(registerRequestDto.getEmail())).thenReturn(Optional.empty());
+            Mockito.when(jwtHandler.extractUserName(any())).thenReturn("email@gmail.com");
+            Mockito.when(userServicePort.findUserByEmail("email@gmail.com")).thenReturn(Optional.empty());
+
+            Assertions.assertThrows(
+                    NoDataFoundException.class,
+                    () -> userHandler.registerEmployee(registerRequestDto, 3L)
+            );
+        }
+    }
+
+
+    @Test
+    void mustBeRegisterAClient(){
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+        UserRequestDto userRequestDto = FactoryUserDataTest.getUserRequestDto(4l);
+        User userModel = FactoryUserDataTest.getUserModel(4l, "ROLE_CLIENTE");
+        UserResponseDto userResponseDto = FactoryUserDataTest.getUserResponseDto();
+
+        Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.empty());
+        Mockito.when(userRequestMapper.toUserRequestDto(any())).thenReturn(userRequestDto);
+        Mockito.when(userRequestMapper.toUser(any())).thenReturn(userModel);
+        Mockito.when(rolServicePort.getRole(any())).thenReturn(userModel.getRoleId());
+        Mockito.when(userResponseMapper.toResponse(any(), any())).thenReturn(userResponseDto);
+
+        Assertions.assertEquals(userResponseDto, userHandler.registerClient(registerRequestDto));
+
+        Mockito.verify(userServicePort).saveUser(any(User.class));
+
+    }
+
+    @Test
+    void throwEmailAlreadyExceptionWhenAttempToRegisterAClient(){
+        RegisterRequestDto registerRequestDto = FactoryUserDataTest.getRegisterRequestDto();
+        UserEntity userEntity = FactoryUserDataTest.getUserEntity();
+
+        Mockito.when(userServicePort.findUserByEmail(any())).thenReturn(Optional.of(userEntity));
+
+        Assertions.assertThrows(
+                EmailAlreadyExistsException.class,
+                ()-> userHandler.registerClient(registerRequestDto)
+        );
+
+    }
 }

@@ -38,7 +38,7 @@ public class AuthenticationRestController {
     })
     @RolesAllowed({"ROLE_ADMINISTRADOR"})
     @PostMapping("/owner")
-    public ResponseEntity<ResponseDto> ownerRegister(@Valid @RequestBody UserRequestDto userRequestDto,
+    public ResponseEntity<ResponseDto> ownerRegister(@Valid @RequestBody RegisterRequestDto registerRequestDto,
                                                      BindingResult bindingResult) {
         ResponseDto responseDto = new ResponseDto();
 
@@ -47,7 +47,7 @@ public class AuthenticationRestController {
         }
 
         try {
-            UserResponseDto userResponseDto = userHandler.registerOwner(userRequestDto);
+            UserResponseDto userResponseDto = userHandler.registerOwner(registerRequestDto);
             responseDto.setError(false);
             responseDto.setMessage(null);
             responseDto.setData(userResponseDto);
