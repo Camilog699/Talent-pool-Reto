@@ -178,4 +178,14 @@ public class OrderHandler implements IOrderHandler {
         return updateOrder(orderModel, orderId);
     }
 
+    @Override
+    public OrderResponseDto orderCancel(Long orderId){
+        Order orderModel = orderServicePort.getById(orderId);
+        if(orderModel.getStatus() != OrderState.PENDIENTE){
+            throw new OrderNotPendingException();
+        }
+        orderModel.setStatus(OrderState.CANCELADO);
+        return updateOrder(orderModel, orderId);
+    }
+
 }
