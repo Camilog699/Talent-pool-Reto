@@ -154,4 +154,28 @@ public class OrderHandler implements IOrderHandler {
         return updateOrder(orderModel, orderId);
     }
 
+    @Override
+    public OrderResponseDto orderDelivered(Long orderId, Long pin){
+        String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
+        String splited[] = tokenHeader.split("\\s+");
+        String email = jwtHandler.extractUserName(splited[1]);
+        UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getByEmail(email).getBody()).getData();
+        Employee employeeModel = employeeServicePort.getRestaurantByEmployeeId(userRequestDto.getId());
+        if (employeeModel == null) {
+            throw new NotEnoughPrivilegesException();
+        }
+        if (!Objects.equals(orderServicePort.getById(orderId).getRestaurantId().getId(), employeeModel.getRestaurantId().getId())) {
+            throw new NotEnoughPrivilegesForThisRestaurantException();
+        }
+        Order orderModel = orderServicePort.getById(orderId);
+        if (!Objects.equals(orderModel.getId()*1110, pin)) {
+            throw new InvalidPinException();
+        }
+        if (orderModel.getStatus() != OrderState.LISTO) {
+            throw new OrderNotReadyException();
+        }
+        orderModel.setStatus(OrderState.ENTREGADO);
+        return updateOrder(orderModel, orderId);
+    }
+
 }

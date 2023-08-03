@@ -198,6 +198,52 @@ public class OrderRestController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "Order delivered")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Order delivered",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrderResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Order not found",
+                    content = {@Content(mediaType = "application/json")}),
+    })
+    @PutMapping("/delivered/")
+    public ResponseEntity<ResponseDto> orderDelivered(@RequestBody OrderDeliveredRequestDto orderDeliveredRequestDto) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            OrderResponseDto orderResponseDto = orderHandler.orderDelivered(orderDeliveredRequestDto.getOrderId(), orderDeliveredRequestDto.getPin());
+            responseDto.setError(false);
+            responseDto.setMessage(null);
+            responseDto.setData(orderResponseDto);
+        } catch (NotEnoughPrivilegesException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (NotEnoughPrivilegesForThisRestaurantException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("You don't have enough privileges to perform this action in this restaurant");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (InvalidPinException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Invalid pin");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (OrderNotReadyException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Order is not ready");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (Exception ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Internal server error");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 
     private ResponseEntity<ResponseDto> validationErrors(BindingResult bindingResult, ResponseDto responseDto) {
         List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
