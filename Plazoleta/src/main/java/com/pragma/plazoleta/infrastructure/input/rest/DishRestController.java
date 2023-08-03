@@ -71,7 +71,7 @@ public class DishRestController {
             return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setMessage("You don't have enough privileges to perform this action, only the owner can do it");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (Exception ex) {

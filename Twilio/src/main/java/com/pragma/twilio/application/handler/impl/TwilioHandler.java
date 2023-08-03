@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class TwilioHandler implements ITwilioHandler {
 
     public static final String ACCOUNT_SID = "AC9165f7676049efeaf94b2cad88df0e83";
-    public static final String AUTH_TOKEN = "a3ff969c01fe3dbd3c3fd7e14140439d";
+    public static final String AUTH_TOKEN = "8c1050326fcfba70846f94c219869c72";
     @Override
     public void sendMessage(TwilioRequestDto twilioRequestDto) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);

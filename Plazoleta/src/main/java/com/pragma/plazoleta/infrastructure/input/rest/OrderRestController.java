@@ -108,7 +108,7 @@ public class OrderRestController {
             responseDto.setData(orderStateResponseDtoList);
         }  catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setMessage("You don't have enough privileges to perform this action, only employees can perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         }    catch (Exception ex) {
@@ -141,7 +141,7 @@ public class OrderRestController {
             responseDto.setData(orderResponseDto);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setMessage("You don't have enough privileges to perform this action, only employees can perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (NotEnoughPrivilegesForThisRestaurantException ex) {
@@ -181,7 +181,7 @@ public class OrderRestController {
             responseDto.setData(orderResponseDto);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setMessage("You don't have enough privileges to perform this action, only employees can perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (NotEnoughPrivilegesForThisRestaurantException ex) {
@@ -218,7 +218,7 @@ public class OrderRestController {
             responseDto.setData(orderResponseDto);
         } catch (NotEnoughPrivilegesException ex) {
             responseDto.setError(true);
-            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setMessage("You don't have enough privileges to perform this action, only employees can perform this action");
             responseDto.setData(null);
             return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
         } catch (NotEnoughPrivilegesForThisRestaurantException ex) {

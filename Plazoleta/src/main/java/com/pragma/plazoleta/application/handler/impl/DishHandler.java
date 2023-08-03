@@ -49,9 +49,11 @@ public class DishHandler implements IDishHandler {
         if (restaurant == null) {
             throw new RestaurantNotFoundException();
         }
-        UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getUserById(restaurant.getOwnerId()).getBody()).getData();
-
-        if (!Objects.equals(restaurant.getOwnerId(), userRequestDto.getId())) {
+        String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
+        String[] split = tokenHeader.split("\\s+");
+        String email = jwtHandler.extractUserName(split[1]);
+        UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getByEmail(email).getBody()).getData();
+        if(!restaurant.getOwnerId().equals(userRequestDto.getId())){
             throw new NotEnoughPrivilegesException();
         }
         Dish dish = dishRequestMapper.toDish(dishRequestDto);

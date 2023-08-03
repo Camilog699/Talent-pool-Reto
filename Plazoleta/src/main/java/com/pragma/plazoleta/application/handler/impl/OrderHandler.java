@@ -57,7 +57,6 @@ public class OrderHandler implements IOrderHandler {
         UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getByEmail(email).getBody()).getData();
         List<OrderState> orderStateList = Arrays.asList(OrderState.EN_PREPARACION, OrderState.PENDIENTE, OrderState.LISTO);
         List<OrderDishRequestDto> dishesRequest = orderRequestDto.getDishes();
-
         Order order = new Order();
         order.setRestaurantId(restaurant);
         order.setClientId(userRequestMapper.toUser(userRequestDto));
