@@ -1,15 +1,13 @@
 package com.pragma.plazoleta.infrastructure.input.rest;
 
+import com.pragma.plazoleta.application.dto.request.OrderDeliveredRequestDto;
 import com.pragma.plazoleta.application.dto.request.OrderRequestDto;
 import com.pragma.plazoleta.application.dto.response.OrderResponseDto;
 import com.pragma.plazoleta.application.dto.response.OrderStateResponseDto;
 import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.handler.IOrderHandler;
 import com.pragma.plazoleta.common.OrderState;
-import com.pragma.plazoleta.common.exception.CategoryNotFoundException;
-import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesException;
-import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesForThisRestaurantException;
-import com.pragma.plazoleta.common.exception.RestaurantNotFoundException;
+import com.pragma.plazoleta.common.exception.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -163,6 +161,44 @@ public class OrderRestController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "Change order to ready state")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Order state changed",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrderResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Order not found",
+                    content = {@Content(mediaType = "application/json")}),
+    })
+    @PutMapping("/ready/{id}")
+    public ResponseEntity<ResponseDto> orderToReady(@PathVariable Long id) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            OrderResponseDto orderResponseDto = orderHandler.orderReady(id);
+            responseDto.setError(false);
+            responseDto.setMessage(null);
+            responseDto.setData(orderResponseDto);
+        } catch (NotEnoughPrivilegesException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("You don't have enough privileges to perform this action");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (NotEnoughPrivilegesForThisRestaurantException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("You don't have enough privileges to perform this action in this restaurant");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (Exception ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Internal server error");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+
     private ResponseEntity<ResponseDto> validationErrors(BindingResult bindingResult, ResponseDto responseDto) {
         List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
 
@@ -172,6 +208,5 @@ public class OrderRestController {
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
-
 
 }

@@ -4,18 +4,17 @@ import com.pragma.plazoleta.application.dto.request.*;
 import com.pragma.plazoleta.application.dto.response.OrderDishResponseDto;
 import com.pragma.plazoleta.application.dto.response.OrderResponseDto;
 import com.pragma.plazoleta.application.dto.response.OrderStateResponseDto;
+import com.pragma.plazoleta.application.dto.response.ResponseDto;
 import com.pragma.plazoleta.application.handler.IJwtHandler;
 import com.pragma.plazoleta.application.handler.IOrderDishHandler;
 import com.pragma.plazoleta.application.handler.IOrderHandler;
 import com.pragma.plazoleta.application.mapper.*;
 import com.pragma.plazoleta.common.OrderState;
-import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesException;
-import com.pragma.plazoleta.common.exception.NotEnoughPrivilegesForThisRestaurantException;
+import com.pragma.plazoleta.common.exception.*;
 import com.pragma.plazoleta.domain.api.*;
 import com.pragma.plazoleta.domain.model.*;
 import com.pragma.plazoleta.infrastructure.configuration.FeignClientInterceptorImp;
-import com.pragma.plazoleta.common.exception.DishNotFoundException;
-import com.pragma.plazoleta.common.exception.RestaurantNotFoundException;
+import com.pragma.plazoleta.infrastructure.input.rest.client.ITwilioFeignClient;
 import com.pragma.plazoleta.infrastructure.input.rest.client.IUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +36,7 @@ public class OrderHandler implements IOrderHandler {
     private final IOrderResponseMapper orderResponseMapper;
     private final IOrderDishResponseMapper orderDishResponseMapper;
     private final IUserFeignClient userClient;
+    private final ITwilioFeignClient twilioClient;
     private final IJwtHandler jwtHandler;
     private final IDishServicePort dishServicePort;
     private final IOrderDishHandler orderDishHandler;
@@ -128,6 +128,30 @@ public class OrderHandler implements IOrderHandler {
         return updateOrder(orderModel, orderId);
     }
 
-
+    @Override
+    public OrderResponseDto orderReady(Long orderId){
+        String tokenHeader = FeignClientInterceptorImp.getBearerTokenHeader();
+        String splited[] = tokenHeader.split("\\s+");
+        String email = jwtHandler.extractUserName(splited[1]);
+        UserRequestDto userRequestDto = Objects.requireNonNull(userClient.getByEmail(email).getBody()).getData();
+        Employee employeeModel = employeeServicePort.getRestaurantByEmployeeId(userRequestDto.getId());
+        if (employeeModel == null) {
+            throw new NotEnoughPrivilegesException();
+        }
+        if (!Objects.equals(orderServicePort.getById(orderId).getRestaurantId().getId(), employeeModel.getRestaurantId().getId())) {
+            throw new NotEnoughPrivilegesForThisRestaurantException();
+        }
+        Order orderModel = orderServicePort.getById(orderId);
+        orderModel.setStatus(OrderState.LISTO);
+        TwilioRequestDto twilioRequestDto = new TwilioRequestDto();
+        twilioRequestDto.setMessage(String.valueOf(orderModel.getId()*1110));
+        UserRequestDto clientRequestDto = userClient.getUserById(orderModel.getClientId().getId()).getBody().getData();
+        twilioRequestDto.setNumber(clientRequestDto.getPhone());
+        ResponseDto responseDto = twilioClient.sendMessage(twilioRequestDto).getBody();
+        if (responseDto == null) {
+            throw new NotMessageSendException();
+        }
+        return updateOrder(orderModel, orderId);
+    }
 
 }
