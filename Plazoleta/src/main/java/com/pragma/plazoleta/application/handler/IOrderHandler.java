@@ -19,4 +19,10 @@ public interface IOrderHandler {
 
     OrderResponseDto assignOrderToEmployee(Long orderId);
 
+    OrderResponseDto orderReady(Long orderId);
+
+    //OrderResponseDto orderDelivered(Long orderId, Long pin);
+
+    //OrderResponseDto orderCancel(Long orderId);
+
 }

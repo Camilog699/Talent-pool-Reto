@@ -21,7 +21,7 @@ public class TwilioHandler implements ITwilioHandler {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
                         new com.twilio.type.PhoneNumber(twilioRequestDto.getNumber()),
-                        new com.twilio.type.PhoneNumber("+19123725913"),
+                        new com.twilio.type.PhoneNumber("+17622512833"),
                         twilioRequestDto.getMessage())
                 .create();
     }
