@@ -21,7 +21,7 @@ public interface IOrderHandler {
 
     OrderResponseDto orderReady(Long orderId);
 
-    //OrderResponseDto orderDelivered(Long orderId, Long pin);
+    OrderResponseDto orderDelivered(Long orderId, Long pin);
 
     //OrderResponseDto orderCancel(Long orderId);
 
