@@ -245,6 +245,38 @@ public class OrderRestController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "Order canceled")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Order canceled",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrderResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Order not found",
+                    content = {@Content(mediaType = "application/json")}),
+    })
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<ResponseDto> orderCancel(@PathVariable Long id) {
+
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            OrderResponseDto orderResponseDto = orderHandler.orderCancel(id);
+            responseDto.setError(false);
+            responseDto.setMessage(null);
+            responseDto.setData(orderResponseDto);
+        } catch (OrderNotPendingException ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Sorry, your order is already in preparation and cannot be cancelled.");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        } catch (Exception ex) {
+            responseDto.setError(true);
+            responseDto.setMessage("Internal server error");
+            responseDto.setData(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
     private ResponseEntity<ResponseDto> validationErrors(BindingResult bindingResult, ResponseDto responseDto) {
         List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
 
